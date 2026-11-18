@@ -615,6 +615,9 @@ impl<S: 'static> Host<S> {
     pub(super) fn paint(&mut self, event_loop: &ActiveEventLoop) {
         // The frame a due timer asked for drew, or ran covered in `draw`.
         if let Some(l) = &mut self.win { l.timer_frame.drawn(); }
+        // `App::float_on_open`: the paint after the first frame's callback releases the limits.
+        #[cfg(all(unix, not(target_os = "macos"), not(target_os = "ios"), not(target_os = "android")))]
+        if self.float_on_open && let Some(l) = &mut self.win { float_on_open::paint(l, &self.options, self.spec.min_size); }
         // AppKit paints off its own display link; elsewhere a paint holds what it asks for.
         #[cfg(not(target_os = "macos"))]
         if let Some(l) = &self.win { l.redraw_step(RedrawEvent::Paint); }

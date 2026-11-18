@@ -67,6 +67,8 @@ mod tests;
 #[derive(Default)]
 pub(super) struct Native {
     pub(super) activator: Option<crate::platform::activation::Activator>,
+    /// `App::float_on_open`: where the window is in taking its own size limits.
+    pub(super) float: super::float_on_open::Release,
 }
 
 #[cfg(target_os = "windows")]
