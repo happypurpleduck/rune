@@ -573,7 +573,7 @@ impl<S: 'static> Host<S> {
         let present_log = args.trace.as_ref().map(|_| Arc::default());
         let mut app = app;
         let comp = app.compositor.take();
-        let (on_focus, on_ime, on_visibility) = (app.on_focus, app.on_ime, app.on_visibility);
+        let (on_focus, on_ime, on_visibility, on_mods) = (app.on_focus, app.on_ime, app.on_visibility, app.on_mods);
         let titlebar = app.titlebar.filter(|_| !options.borderless);
         let chrome = app.chrome;
         let (srgb_blend, font_smoothing) = (app.srgb_blend, app.font_smoothing);
@@ -605,6 +605,7 @@ impl<S: 'static> Host<S> {
         }
         rt.on_focus = on_focus;
         rt.on_visibility = on_visibility;
+        rt.on_mods = on_mods;
         rt.app_ime.hook = on_ime;
         rt.set_modifier_keys(modifier_keys);
         rt.set_srgb_blend(srgb_blend); rt.set_font_smoothing(font_smoothing);

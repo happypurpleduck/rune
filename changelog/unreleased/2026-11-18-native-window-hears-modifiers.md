@@ -1,0 +1,1 @@
+- **`App::on_modifiers` now runs in a native window and in `App::headless_runtime`.** Only the headless tools (`--snap`, `--script`), the web and the virtual desktop installed it, so an app that showed something while Alt was held (menu mnemonics, say) saw it in those and never in its real window, nor in its unit tests. Windows made from a `WindowSpec` take it too.
