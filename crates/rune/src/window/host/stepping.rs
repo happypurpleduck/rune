@@ -12,7 +12,7 @@ use crate::time::Instant;
 #[cfg(not(target_os = "macos"))]
 use crate::window::chrome;
 #[cfg(all(unix, not(target_os = "macos"), not(target_os = "ios"), not(target_os = "android")))]
-use crate::window::chrome::float_on_open;
+use crate::window::chrome::float_on_open::{self, ReleaseEvent};
 #[cfg(target_os = "macos")]
 use crate::window::chrome::sync_chrome_core;
 use crate::window::is_wayland;
@@ -101,7 +101,9 @@ impl Host {
         }
         let reveal = w.first_frame.complete();
         #[cfg(all(unix, not(target_os = "macos"), not(target_os = "ios"), not(target_os = "android")))]
-        if self.float_on_open && !w.first_frame.notified() { float_on_open::release(&w.window, &self.options, self.geometry.min_size); }
+        if self.float_on_open && !w.first_frame.notified() {
+            float_on_open::step(w, ReleaseEvent::FirstFrame, &self.options, self.geometry.min_size);
+        }
         self.native_handle.native.ready.store(true, Ordering::Release);
         self.shared.set_window_error(None);
         crate::tooling::perf_warn::launch::first_frame();
